@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>	</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		ul,li {
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+		}
+		.clearfix:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+		.ct {
+			width: 1262px;
+			margin: 0 auto;
+			
+			
+		}
+		label {
+			margin: 10px;
+		}
+		input[name='ID']{
+			margin: 10px;
+		}
+		.showInf li {
+			width: 400px;
+			height: 180px;
+			border: 1px solid #ccc;
+			border-radius: 12px;
+			float: left;
+			margin: 0 10px 10px 10px;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		}
+		.showInf li img{
+			width: 150px;
+			height: 150px;
+			
+			float: right;
+			border: 1px solid #aaa;
+			
+		}
+		
+
+		.modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0,0,0,0.4);
+			display: none;
+			
+		}
+		.modal.active {
+		
+			display: block;
+			
+		}
+		.card {
+			width: 500px;			
+			border: 1px solid #ccc;
+									
+			background: white;			
+			box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			border-radius: 5px 5px 0 0;
+
+		}
+		.card input[type="text"]{ /* 注意属性选择器的写法*/
+             padding:8px 0;
+             display:block;/* 设置为块级元素，让input另起一行*/
+             width:100%;/* 宽度是父容器宽度的一倍*/
+             border: none; /* 去掉输入框的边框*/
+             border-bottom:1px solid #808080;/* 只留下下边框*/
+           }
+			.card input[type="text"]:focus{ 
+ 			 outline:none;  
+				}
+
+		.card>header {			
+			background: #009688;
+			color: #fff;
+			border-radius: 5px 5px 0 0;
+			padding: 10px;			
+		}
+		.card main {
+			
+			padding: 16px;
+		}
+		.card .close {
+			font-size: 20px;
+			font-weight: bold;
+			float:right;
+			cursor: pointer;
+		}
+		.card input[type=submit],.button{
+ 			 color:#fff;
+ 			 background:#009688;
+ 		
+ 			 padding:8px 16px;
+ 			 margin-top: 10px;
+  
+    }
+        .btnct {
+        	width: 500px;
+        	margin: 0 auto;
+        }
+    	.button {
+    		width: 80px;
+            float: left;
+            margin: 10px;
+            text-align: center;
+            border-radius: 4px;
+           
+
+ 		}
+ 		
+ 		.button:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+	</style>
+</head>
+<body>
+	<div class="ct ">
+		<ul class='clearfix btnct'>
+		<li><a href="#" class='button add'>添加</a></li>
+		<li><a href="#" class='button delete'>删除</a></li>
+		<li><a href="#" class='button read'>读取</a></li>
+		<li><a href="#" class='button put'>更新</a></li>
+		<li><a href="#" class='button readAll'>全部</a></li>
+	   </ul>
+
+		<ul class="showInf clearfix">
+			<!-- <li><img src="https://ps.ssl.qhimg.com/sdmt/110_162_100/t011a849afc0f6bbc8b.webp"><h3>Id:001</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+				
+			</li>
+			<li><img src="http://img4.duitang.com/uploads/item/201205/25/20120525185826_R5ur3.thumb.700_0.jpeg"><h3>Id:002</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+			</li>
+			<li><img src="http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg"><h3>Id:003</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+			</li>
+			<li><img src="https://ps.ssl.qhimg.com/sdmt/110_162_100/t011a849afc0f6bbc8b.webp"><h3>Id:004</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+			</li>
+			<li><img src="http://img4.duitang.com/uploads/item/201205/25/20120525185826_R5ur3.thumb.700_0.jpeg"><h3>Id:011</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+			</li>
+			<li><img src="http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg"><h3>Id:101</h3>
+				<p>姓名: lll</p> <p>年龄: 11</p> <p>邮箱: xxx@.com</p>
+				<a href="#" class='button'>详情</a>
+			</li> -->
+		</ul>
+
+		<div class="modal">
+		        <div class="card">	
+		        	<header class="clearfix"><span class='close'>x</span> <p>信息收集表</p></header>
+		        	<main>	
+                   		 <label>ID</label> <input type="text" name="ID"><br>
+                  		 <label>姓名</label><input type="text" name="name"><br>
+                  		 <label>年龄</label><input type="text" name="age"><br>
+                  		 <label>邮箱</label><input type="text" name="email"><br>
+                   		 <label>照片</label><input type="text" name="img">
+                    	 <div><input type="submit" value="提交"> </div>
+		        	</main>
+		        	
+		                              
+		        </div>	
+
+		</div>
+	</div>
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript">
+    const DB_NAME='test2';
+    const DB_VERSION=2;
+    const STORE_NAME='student';
+
+
+
+
+	var data=[
+         { ID: 21, name: 'LLL', age: 11,  email:'aaafdfdf@.com' ,img:'http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg'},
+         { ID: 12, name: 'XXX', age: 12,  email:'bbbdfdfdf@.com' ,img:'http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg'},
+         { ID: 53, name: 'CCC', age: 21,  email:'cccdfdfdf@.com' ,img:'http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg'},
+
+	]
+
+ buildDB(DB_NAME,DB_VERSION,{
+	 onupgrade: function(db){
+	 
+	 createObjectStore(db,'student',[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+        },
+     onsuccess: function(db){
+     	console.log('renderHTML......')
+	  readAll(db,'student',renderHtmlFromIndex);
+	   
+       }
+
+})
+/*  DOM 操作*/
+$('.btnct .add').on('click',function(e){
+	 $('.modal').addClass('active');
+})
+
+/*提交之后将数据存入数据库*/
+$('.card input[type=submit]').on('click',function(e){
+	
+	var newdata=getData();
+	buildDB(DB_NAME,DB_VERSION,{
+	 onupgrade: function(db){
+	 createObjectStore(db,'student',[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+        },
+     onsuccess: function(db){
+     	add(db,'student',getData());
+     	renderHtml(getData());
+     	$('.card input[type=text]').val('');
+	   /*remove(db,'student',17);
+	   remove(db,'student',10);
+	   remove(db,'student',43);
+	   readAll(db,'student');*/
+	   
+       }
+	
+
+})
+$('.modal').removeClass('active');
+   //$('.card input[type=text]').val(''); //不能放在这里，异步
+})
+
+$('.card .close').on('click',function(e){
+	$('.modal').removeClass('active');
+	$('.card input[type=text]').val('');
+})
+
+
+
+$('.btnct .readAll').on('click',function(e){
+	
+	buildDB(DB_NAME,DB_VERSION,{
+	 onupgrade: function(db){
+	 createObjectStore(db,'student',[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+        },
+     onsuccess: function(db){
+     	readAll(db,'student',function(cursor){
+     		if (cursor) {
+     	console.log('key: ' + cursor.key)
+     	for(var key in cursor.value){
+     		console.log(key,cursor.value[key])
+     	}
+      /* console.log('Id: ' + cursor.key);
+       console.log('Name: ' + cursor.value.name);
+       console.log('Age: ' + cursor.value.age);
+       console.log('Email: ' + cursor.value.email);*/
+       cursor.continue(); //指针往下
+    } else {
+      console.log('没有更多数据了！');
+    }
+     	});
+	   /*remove(db,'student',17);
+	   remove(db,'student',10);
+	   remove(db,'student',43);
+	   readAll(db,'student');*/
+	   
+       }
+})
+})
+function getData(){
+	var dataObj={};
+	$('.card input[type=text]').each(function(idx,ele){             
+		 var dataKey = $(ele).attr('name');
+		 var dataVal = $(ele).val();
+		 dataObj[dataKey]=dataVal;
+
+	})
+    console.log(dataObj)
+    return(dataObj);
+
+}
+
+
+/*
+   1. 读数据
+   2. 渲染
+
+*/
+function renderHtmlFromIndex(cursor){
+
+	var html='';
+	if(cursor){
+        
+	    html+='<li><img src='+ cursor.value.img +'><h3>Id:'+cursor.value.ID+'</h3><p>姓名:'+ cursor.value.name 
+	       +'</p> <p>年龄: '+  cursor.value.age   +'</p> <p>邮箱: '+ cursor.value.email
+	       +'</p><a href="#" class="button">详情</a></li>'
+       cursor.continue(); //指针往下
+       console.log(typeof html)
+	}
+	$('.showInf').append($(html));
+	console.log('1111111')
+
+}
+function renderHtml(dataObj){
+
+	var html='';
+	      
+	    html+='<li><img src='+ dataObj.img +'><h3>Id:'+dataObj.ID+'</h3><p>姓名:'+ dataObj.name 
+	       +'</p> <p>年龄: '+  dataObj.age   +'</p> <p>邮箱: '+ dataObj.email
+	       +'</p><a href="#" class="button">详情</a></li>'
+      
+
+	$('.showInf').append($(html));
+
+
+}
+
+
+
+/*---------------------------数据库操作----------------------------------------------------*/
+
+
+/*-----------打开或建立一个数据库----------------------------------*/
+    /* step0: 判断浏览器是否支持*/
+    function caniuseIndexedDB(){
+        var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+            if(!indexedDB){
+                  console.log("你的浏览器不支持IndexedDB");
+             }
+             /*在实际生产中用这个*/
+            /* if (!window.indexedDB) {
+              window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.")
+              }   */       
+    }
+
+
+
+/*var db=buildDB('Test1',2,{
+	 onupgrade: function(db){
+	 createObjectStore(db,'student',[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+        },
+     onsuccess: function(db){
+     	
+	   remove(db,'student',17);
+	   remove(db,'student',10);
+	   remove(db,'student',43);
+	   readAll(db,'student');
+	   
+       }
+   })*/
+/*封装成这样
+buildDB('Test1',1, { success: function(){}, onupgrate: function(){}, onerror: function(){}})
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*打开一个数据库 数据库名称，版本，成功后的操作   */
+    function buildDB(dbName,version,callbackObj){
+    /* step1: 打开一个indexedDB,得到一个操作请求 IDRequest对象*/
+    /* indexedDB.open(数据库名字, 数据库版本) => IDRequest，若数据库不存在，就会新建一个数据库，版本为1*/
+	  var request=indexedDB.open(dbName, version);
+	  console.log(request)
+	/*打开数据库失败*/
+      request.onerror = function(e) {
+            console.log(e.currentTarget.error.message);
+            if(callbackObj.onerror){
+        	callbackObj.onerror();
+        }
+            
+      };
+   /* 打开数据库成功， e.target.result为数据库对象 */
+    request.onsuccess = function(e) {
+        var db = e.target.result;
+        console.log('成功打开DB');
+        console.log(db)
+        if(callbackObj.onsuccess){
+        	callbackObj.onsuccess(db);
+        }
+        
+       // return db; //无法返回
+        
+    };
+
+
+ //若要求打开的数据库版本大于现有的版本，升级
+
+    request.onupgradeneeded = function(e) {
+        var db = e.target.result; //数据库对象
+        console.log('升级db,执行callback')
+        if(callbackObj.onupgrade){
+        	callbackObj.onupgrade(db);
+        }
+       
+     };
+}
+	
+/*----------------------数据操作: 添加一条记录，删除，更新，读取，以及读取全部数据-------------------*/
+/*----------------------数据操作: 添加一条记录，删除，更新，读取，以及读取全部数据-------------------*/
+/*添加数据
+  参数：数据库对象，数据仓库名，待添加的数据
+
+*/
+
+function add(db,storeName,dataObj) {
+   /*上面代码中，写入数据需要新建一个事务。新建时必须指定表格名称和操作模式（“只读”或“读写”）。新建事务以后，通过IDBTransaction.objectStore(name)方法，拿到 IDBObjectStore 对象，再通过表格对象的add()方法，向表格写入一条记录。*/
+
+   //新建一个事务，新建时必须指定表格名称和操作模式（“只读”或“读写”）
+   var transaction = db.transaction([storeName], 'readwrite');
+   //通过IDBTransaction.objectStore(name)方法，拿到 IDBObjectStore 对象
+   var store = transaction.objectStore(storeName);
+
+   //再通过表格对象的add()方法，向表格写入一条记录
+    //var request = store.add({ id: 1, name: '张三', age: 24, email: 'zhangsan@example.com' });
+  var request = store.add(dataObj);
+//以上简写为，链式调用
+  /*var request = db.transaction(['person'], 'readwrite')
+    .objectStore('person')
+    .add({ id: 1, name: '张三', age: 24, email: 'zhangsan@example.com' });*/
+
+//写入操作是一个异步操作，通过监听连接对象的success事件和error事件，了解是否写入成功。
+  request.onsuccess = function (event) {
+    console.log('数据写入成功');
+  };
+
+  request.onerror = function (event) {
+    console.log('数据写入失败');
+  }
+}
+/*添加数据
+  参数：数据库对象，数据仓库名，主键值, 回调函数
+*/
+
+function read(db,storeName,keyPath,callback) {
+	/*transaction(['person'])第一个参数是一个数组，里面是所涉及的对象仓库，通常是只有一个；
+	第二个参数是一个表示操作类型的字符串。目前，操作类型只有两种：readonly（只读）和readwrite（读写）。添加数据使用readwrite，读取数据使用readonly。第二个参数是可选的，省略时默认为readonly模式*/
+   var transaction = db.transaction([storeName]);
+     
+   var objectStore = transaction.objectStore(storeName);
+   //根据主键来读取数据
+   var request = objectStore.get(keyPath);
+
+   request.onerror = function(event) {
+     console.log('事务失败');
+   };
+
+   request.onsuccess = function( event) {
+   	 
+   	  console.log('read...')
+          	     console.log(request.result)
+   	  if(request.result){
+          if(callback){         	   
+       	         callback(request.result);
+           }
+           /* console.log('Name: ' + request.result.name);
+        console.log('Age: ' + request.result.age);
+        console.log('Email: ' + request.result.email);*/
+
+   	  }else {
+        console.log('未获得数据记录');
+        return;
+      }
+   };
+}
+
+// 遍历数据， 使用指针对象 IDBCursor ，建立指针对象objectStore.openCursor()
+function readAll(db,storeName,callback) {
+  var objectStore = db.transaction(storeName).objectStore(storeName);
+
+   objectStore.openCursor().onsuccess = function (event) {
+     var cursor = event.target.result;
+         if(callback){
+            	callback(cursor);
+          }
+      
+     /*if (cursor) {
+     	console.log('key: ' + cursor.key)
+     	for(var key in cursor.value){
+     		console.log(key,cursor.value[key])
+     	}
+       console.log('Id: ' + cursor.key);
+       console.log('Name: ' + cursor.value.name);
+       console.log('Age: ' + cursor.value.age);
+       console.log('Email: ' + cursor.value.email);
+       cursor.continue(); //指针往下
+    } else {
+      console.log('没有更多数据了！');
+    }*/
+  };
+}
+//更新数据
+function update(db,storeName,newData) {
+
+  var request = db.transaction(storeName, 'readwrite')
+    .objectStore(storeName).put(newData);
+    //.put({ id: 1, name: '李四', age: 35, email: 'lisi@example.com' });
+
+  request.onsuccess = function (event) {
+    console.log('数据更新成功');
+  };
+
+  request.onerror = function (event) {
+    console.log('数据更新失败');
+  }
+}
+/*----------------------数据操作: 添加一条记录，删除，更新，读取，以及读取全部数据-------------------*/
+/*----------------------数据操作: 添加一条记录，删除，更新，读取，以及读取全部数据-------------------*/
+
+
+/*-----------------------删除操作----------------------------------------------------------------------------*/
+/*-----------------------删除操作----------------------------------------------------------------------------*/
+//----------删除数据-------------------------------------------------
+function remove(db,storeName,keyPath) {
+  var request = db.transaction([storeName], 'readwrite')
+    .objectStore(storeName)
+    .delete(keyPath);
+
+  request.onsuccess = function (event) {
+    console.log('数据删除成功');
+  };
+   request.onerror = function (event) {
+    console.log('数据删除失败');
+  }
+}
+//----------删除数据仓库表-------------------------------------------------
+/*删除数据仓库表 db.createObjectStore只能在IDBDatabase.onversionchange中使用，
+ 数据库版本变化时触发（发生upgradeneeded事件，或调用indexedDB.deleteDatabase()）*/
+function deleteObjectStore(dbName, dbVersion, oldStoreName,newStoreName){
+
+var request = indexedDB.open(dbName, dbVersion);
+
+
+  var db = request.result;
+  db.deleteObjectStore(oldStoreName);
+  console.log('删除数据仓库表成功')
+  
+ 
+  /*if (e.oldVersion < 1) {
+    db.createObjectStore('store1');
+  }
+
+  if (e.oldVersion < 2) {
+    db.deleteObjectStore('store1');
+    db.createObjectStore('store2');
+  }*/
+
+
+
+}
+
+
+//----------删除数据库-------------------------------------------------
+
+//删除数据库 调用 indexedDB.deleteDatabase(name),返回 IDBRequest对象
+//删除不存在的数据库并不会报错
+function deleteDB(name) {
+
+    var DBDeleteRequest = window.indexedDB.deleteDatabase(name);
+    DBDeleteRequest.onerror = function (event) {
+             console.log('deleteDB Error');
+     };
+
+    DBDeleteRequest.onsuccess = function (event) {
+              console.log('deleteDB success');
+    };
+
+}
+/*-----------------------删除操作----------------------------------------------------------------------------*/
+/*-----------------------删除操作----------------------------------------------------------------------------*/
+
+
+/*新建一个数据仓库表*/
+ // request.onupgradeneeded 和 indexedDB.deleteDatabase 会触发 IDBdataBase 的onversionchange事件
+ // 在onversionchange事件里可以使用 db.createObjectStore和 db.deleteObjectStore来创建和删除数据表
+
+ /*说明: 在当前的数据库db中新建一个名为storeName的数据仓库表,表的主键为keyPath(默认是一个递增的整数)，
+         表的索引对象indexObj
+   参数：数据库对象 新建数据仓库表名称  索引数组indexArr=[{index: 'name', unique: true},{index: 'name', unique: false}]  主键
+   返回：一个IDBObjectStore对象
+
+ */
+function createObjectStore(db,storeName,indexArr,keyPath){
+	//先判断在目前的数据库当中表格（objectStore）是否存在,用表格的名字判断
+    //否则,创建一个新的表格(即对象仓库 IDBObjectStore)
+
+       // db.objectStoreNames 返回一个 DOMStringList 对象（字符串的集合），包含当前数据的所有 object store 的名字
+       //如果该对象仓库已经存在，就会抛出一个错误。为了避免出错，需要用到下文的objectStoreNames属性，检查已有哪些对象仓库
+        if (!db.objectStoreNames.contains(storeName)) {
+            console.log("我需要创建一个新的存储对象");
+          //新建一张叫做person的表格，主键是id
+          //db.createObjectStore(name,{})只能在onversionchange事件里面调用
+          if(keyPath){
+          
+          	var objectStore = db.createObjectStore(storeName, {
+                keyPath: keyPath,
+                 //指定主键为一个递增的整数
+                /*keyPath属性表示主键（由于主键的值不能重复，所以上例存入之前，必须保证数据的email属性值都是不一样的），默认值为null；autoIncrement属性表示，是否使用自动递增的整数作为主键（第一个数据记录为1，第二个数据记录为2，以此类推），默认为false。一般来说，keyPath和autoIncrement属性只要使用一个就够了，如果两个同时使用，表示主键为递增的整数，且对象不得缺少keyPath指定的属性。*/
+            });
+          }else{
+            var objectStore = db.createObjectStore(storeName, {               
+                autoIncrement: true 
+            });
+
+          }
+          
+            
+             
+             /*step3: 新建索引  IDBIndex 对象*/
+
+            //索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）指定可以被索引的字段，unique字段是否唯一
+
+            indexArr.forEach(function(ele){
+
+                   
+            	    console.log(ele)
+                       objectStore.createIndex(ele.idxname, ele.idxname, {
+                        unique: ele.unique
+                      });
+            })
+            	
+            
+
+          /*  objectStore.createIndex("name", "name", {
+                unique: false
+            });
+
+            objectStore.createIndex("phone", "phone", {
+                unique: false
+            });*/
+
+        }
+        return objectStore;
+        //console.log('数据库版本更改为： ' + version);
+}
+
+
+</script>
+</body>
+</html>

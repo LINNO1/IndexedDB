@@ -171,7 +171,6 @@
 		<ul class='clearfix btnct'>
 		<li><a href="#" class='button add'>添加</a></li>
 		<li><a href="#" class='button read'>查找</a></li>
-		<li><a href="#" class='button put'>更新</a></li>
 		<li><a href="#" class='button readAll'>全部</a></li>
 	   </ul>
 
@@ -207,7 +206,7 @@
 		        <div class=" addPanel card">	
 		        	<header class="clearfix"><span class='close'>x</span> <p>信息收集表</p></header>
 		        	<main>	
-                   		 <label>ID</label> <input type="text" name="ID"><br>
+                   		 <label>ID</label> <input type="text" name="id"><br>
                   		 <label>姓名</label><input type="text" name="name"><br>
                   		 <label>年龄</label><input type="text" name="age"><br>
                   		 <label>邮箱</label><input type="text" name="email"><br>
@@ -225,7 +224,7 @@
             <div class="findPanel card">  
               <header class="clearfix"><span class='close'>x</span> <p>查找</p></header>
               <main>  
-                       <label>ID</label> <input type="text" name="ID"><br>                      
+                       <label>ID</label> <input type="text" name="id"><br>                      
                        <div><input type="submit" value="搜索"> </div>
               </main>
               
@@ -236,28 +235,30 @@
 <div class="modalContent">
     <div class="content clearfix">
     
-       <img src="http://img4.duitang.com/uploads/item/201202/09/20120209010939_LNZ5P.jpg">
+       <img src="">
        <div class='basicinf'>
-                         <p><label>ID</label> <input type="text" name="ID"></p>
-                       <p><label>姓名</label><input type="text" name="name"></p>
-                       <p><label>年龄</label><input type="text" name="age"></p>
-                         <p><label>邮箱</label><input type="text" name="email"></p>
+                         <p><label>ID</label> <input type="text" name="id"></p>
+                        <p><label>姓名</label><input type="text" name="name"></p>
+                         <p><label>年龄</label><input type="text" name="age"></p>
+                          <p><label>邮箱</label><input type="text" name="email"></p>
        </div>
-       <p>教育背景</p> <textarea class='data-education'> </textarea>     
-       <p>家庭背景</p> <textarea class='data-family'> </textarea> 
-       <p>自我评价</p> <textarea class='data-rate'> </textarea> 
+       <p>教育背景</p> <textarea class='dataEducation'> </textarea>     
+       <p>家庭背景</p> <textarea class='dataFamily'> </textarea> 
+       <p>自我评价</p> <textarea class='dataRate'> </textarea> 
         <div class="btn"> <a href="#" class='button update'>修改</a> <a href="#" class='button delete'>关闭</a> </div> 
  </div>
                         
   </div>
 	</div>
-<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script> -->
+<script type="text/javascript" src="./jquery2.js"></script>
 <script type="text/javascript" src='./lllindexedDB.js'></script>
 <script type="text/javascript">
 
-    const DB_NAME='Test2';  //数据库名称
-    const DB_VERSION=2;     //数据库版本
+    const DB_NAME='Test3';  //数据库名称
+    const DB_VERSION=1;     //数据库版本
     const STORE_NAME='student';  //数据仓库名
+    const KEY_PATH='id'; //主键
 
 
 
@@ -274,20 +275,20 @@
  buildDB(DB_NAME,DB_VERSION,{
 	 onupgrade: function(db){
 	 
-	 createObjectStore(db,STORE_NAME,[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+	 createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
         },
      onsuccess: function(db){
      	console.log('renderHTML......')
-	    readAll(db,'student',renderHtmlFromIndex);
+	    readAll(db,STORE_NAME,renderHtmlFromIndex);
 	   
        }
 
 })
 
+/* --------------------------------------- 事件监听------------------------------------------------ */
+/* --------------------------------------- 事件监听------------------------------------------------ */
 
-/* -------------- 事件监听------------------------- */
-
-/*----------------添加数据----------------------------------------------------*/
+/*--------------------------------------------添加数据----------------------------------------------------*/
 $('.btnct .add').on('click',function(e){
 	 $('.modalAdd').addClass('active');
 })
@@ -298,12 +299,12 @@ $('.addPanel input[type=submit]').on('click',function(e){
 	 var newdata=getData();
 	 buildDB(DB_NAME,DB_VERSION,{
 	    onupgrade: function(db){
-	         createObjectStore(db,STORE_NAME,[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+	         createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
         },
       onsuccess: function(db){
            checkData(); //如果数据为空，提醒
-        	 add(db,STORE_NAME,getData());
-        	 renderHtml(getData());
+           var data=getData('.addPanel');
+        	 add(db,STORE_NAME,data, renderHtml);        	
      	     $('.addPanel input[type=text]').val('');	            
        }
      })
@@ -323,11 +324,11 @@ $('.btnct .read').on('click',function(e){
 
 /*提交之后将数据存入数据库*/
 $('.findPanel input[type=submit]').on('click',function(e){
-   var id = $(e.target).parents('.card').find('input[name=ID]').val();
+   var id = $(e.target).parents('.card').find('input[name=id]').val();
    console.log('id',id);
    buildDB(DB_NAME,DB_VERSION,{
       onupgrade: function(db){
-           createObjectStore(db,STORE_NAME,[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+           createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
         },
       onsuccess: function(db){
 
@@ -344,19 +345,18 @@ $('.card .close').on('click',function(e){
 })
 
 function renderContent(result){
-      $('.content input[name=ID]').val(result.ID);
+      $('.content img').attr('src',result.img);
+      $('.content input[name=id]').val(result.id);
       $('.content input[name=name]').val(result.name);
       $('.content input[name=age]').val(result.age);
       $('.content input[name=email]').val(result.email);
 
+      $('.content textarea.dataEducation').val(result.dataEducation);
+      $('.content textarea.dataFamily').val(result.dataFamily);
+      $('.content textarea.dataRate').val(result.dataRate);
       $('.modalContent').addClass('active');
  
 }
-
-$('.content .update').on('click',function(e){
-  $('.modalContent').removeClass('active');
- 
-})
 $('.content .close').on('click',function(e){
   $('.modalContent').removeClass('active');
  
@@ -364,8 +364,59 @@ $('.content .close').on('click',function(e){
 
 
 
+/*---------------------详情------------------------------------------*/
+$('.showInf').on('click','.details',function(e){
+      var id = $(e.target).parent('li').attr('data-id');
+     
+     buildDB(DB_NAME,DB_VERSION,{
+      onupgrade: function(db){
+           createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
+        },
+      onsuccess: function(db){
 
-/*----------------添加数据----------------------------------------------------*/
+             read(db,STORE_NAME,id,renderContent);
+       }
+     })
+
+    $('.modalContent').addClass('active');
+
+})
+
+
+/*---------------------数据更新------------------------------------------*/
+
+$('.content .btn').on('click','.update',function(e){
+  $('.modalContent').removeClass('active');
+    buildDB(DB_NAME,DB_VERSION,{
+      onupgrade: function(db){
+           createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
+        },
+      onsuccess: function(db){
+            console.log(getData);
+            update(db,STORE_NAME,getData('.content'),renderHtmlUpdate)
+       }
+     })
+
+})
+
+$('.content .btn').on('click','.delete',function(e){
+  $('.modalContent').removeClass('active');
+})
+function renderHtmlUpdate(db,newdata){
+    $('.showInf').find('li').each(function(idx,ele){
+         if($(ele).attr('data-id')===newdata.id){
+               $(ele).find('.email span').text(newdata.email);
+               $(ele).find('.name span').text(newdata.name);
+               $(ele).find('.age span').text(newdata.age);
+               //$(ele).find('.img').text(newdata.age);
+         }
+    })
+
+}
+
+
+
+/*----------------删除数据----------------------------------------------------*/
 //删除数据
 //$('.showInf .delete').on('click',function(e){ //不能这么写，否则新加的没有绑定事件，用事件代理
 $('.showInf').on('click','.delete',function(e){
@@ -376,16 +427,23 @@ $('.showInf').on('click','.delete',function(e){
     console.log(id);
     buildDB(DB_NAME,DB_VERSION,{
       onupgrade: function(db){
-           createObjectStore(db,STORE_NAME,[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+           createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
         },
       onsuccess: function(db){        
-           remove(db,STORE_NAME,id,renderHtmlFromDB);                            
+           remove(db,STORE_NAME,id,renderHTMLNone);                            
        }
      })
 
 })
 
-
+function renderHTMLNone(db,id){
+     $('.showInf').find('li[data-id]').each(function(idx,ele){
+        if($(ele).attr('data-id')===id){
+          $(ele).css({ display: "none"});
+          return;
+        }
+     })
+}
 
 
 
@@ -395,7 +453,7 @@ $('.btnct .readAll').on('click',function(e){
 	
 	buildDB(DB_NAME,DB_VERSION,{
 	 onupgrade: function(db){
-	 createObjectStore(db,STORE_NAME,[{idxname: 'ID', unique: true},{idxname: 'name', unique: false}],'ID');
+	 createObjectStore(db,STORE_NAME,[{idxname: 'id', unique: true},{idxname: 'name', unique: false}],KEY_PATH);
         },
      onsuccess: function(db){
      	readAll(db,STORE_NAME,function(cursor){
@@ -425,14 +483,27 @@ $('.btnct .readAll').on('click',function(e){
 function checkData(){
 
 }
-function getData(){
+function getData(ct){
 	var dataObj={};
-	$('.card input[type=text]').each(function(idx,ele){             
+  $ct = $(ct);
+	//$('.card input[type=text]').each(function(idx,ele){    
+   $ct.find('input[type=text]').each(function(idx,ele){         
 		 var dataKey = $(ele).attr('name');
 		 var dataVal = $(ele).val();
+     console.log(dataVal)
 		 dataObj[dataKey]=dataVal;
 
 	})
+  $ct.find('textarea').each(function(idx,ele){         
+     var dataKey = $(ele).attr('class');
+     var dataVal = $(ele).val();
+     dataObj[dataKey]=dataVal;
+
+  })
+
+
+
+
     console.log(dataObj)
     return(dataObj);
 }
@@ -452,23 +523,25 @@ function getData(){
 
 /*从数据库中读取数据渲染*/
 
-function renderHtmlFromDB(db,storeName){
+function renderHtmlFromDB(db,id){
 
-var objectStore = db.transaction(storeName).objectStore(storeName);
-
+var objectStore = db.transaction(STORE_NAME).objectStore(STORE_NAME);
+    var html='';
+    $('.showInf').html('');
    objectStore.openCursor().onsuccess = function (event) {
      var cursor = event.target.result;
-        var html='';
+     console.log('cursor',cursor)
+        
         if(cursor){
         
-      html+='<li data-id='+cursor.key+'><img src='+ cursor.value.img +'><h3>Id:'+cursor.value.ID+'</h3><p>姓名:'+ cursor.value.name 
+      html+='<li data-id='+cursor.key+'><img src='+ cursor.value.img +'><h3>Id:'+cursor.value.id+'</h3><p>姓名:'+ cursor.value.name 
          +'</p> <p>年龄: '+  cursor.value.age   +'</p> <p>邮箱: '+ cursor.value.email
          +'</p><a href="#" class="button details">详情</a> <a href="#" class="button delete">删除</a></li>'
        cursor.continue(); //指针往下
        console.log(typeof html)
      }
 
-  $('.showInf').html($(html));
+  $('.showInf').append($(html));
   console.log('开始渲染页面')
 
 
@@ -478,11 +551,12 @@ var objectStore = db.transaction(storeName).objectStore(storeName);
 function renderHtmlFromIndex(cursor){
    
 	var html='';
+  console.log('cursor',cursor)
 	if(cursor){
         
-	    html+='<li data-id='+cursor.key+'><img src='+ cursor.value.img +'><h3>Id:'+cursor.value.ID+'</h3><p>姓名:'+ cursor.value.name 
-	       +'</p> <p>年龄: '+  cursor.value.age   +'</p> <p>邮箱: '+ cursor.value.email
-	       +'</p><a href="#" class="button details">详情</a> <a href="#" class="button delete">删除</a></li>'
+	    html+='<li data-id='+cursor.key+'><img src='+ cursor.value.img +'><h3 class="id">Id:<span>'+cursor.value.id+'</span></h3><p class="name">姓名:<span>'+ cursor.value.name 
+	       +'</span></p> <p class="age">年龄: <span>'+  cursor.value.age   +'</span></p> <p class="email">邮箱: <span>'+ cursor.value.email
+	       +'</span></p><a href="#" class="button details">详情</a> <a href="#" class="button delete">删除</a></li>'
        cursor.continue(); //指针往下
        console.log(typeof html)
 	}
@@ -490,14 +564,16 @@ function renderHtmlFromIndex(cursor){
 	console.log('开始渲染页面')
 
 }
-/*添加一条记录渲染*/
+
+
+/*添加一条记录渲染,直接从表单的数据中添加*/
 function renderHtml(dataObj){
 
 	var html='';
 	      
-	    html+='<li data-id='+dataObj.ID+'><img src='+ dataObj.img +'><h3>Id:'+dataObj.ID+'</h3><p>姓名:'+ dataObj.name 
-	       +'</p> <p>年龄: '+  dataObj.age   +'</p> <p>邮箱: '+ dataObj.email
-	       +'</p><a href="#" class="button details">详情</a> <a href="#" class="button delete">删除</a></li>'
+	    html+='<li data-id='+dataObj.id+'><img src='+ dataObj.img +'><h3 class="id">Id: <span>'+dataObj.id+'</span></h3><p class="name">姓名: <span>'+ dataObj.name 
+	       +'</span></p> <p class="age">年龄: <span>'+  dataObj.age   +'</span></p> <p class="email">邮箱: <span>'+ dataObj.email
+	       +'</span></p><a href="#" class="button details">详情</a> <a href="#" class="button delete">删除</a></li>'
       
 	$('.showInf').append($(html));
 

@@ -93,7 +93,7 @@ buildDB('Test1',1, { success: function(){}, onupgrate: function(){}, onerror: fu
 
 */
 
-function add(db,storeName,dataObj) {
+function add(db,storeName,dataObj,callback) {
    /*上面代码中，写入数据需要新建一个事务。新建时必须指定表格名称和操作模式（“只读”或“读写”）。新建事务以后，通过IDBTransaction.objectStore(name)方法，拿到 IDBObjectStore 对象，再通过表格对象的add()方法，向表格写入一条记录。*/
 
    //新建一个事务，新建时必须指定表格名称和操作模式（“只读”或“读写”）
@@ -112,6 +112,9 @@ function add(db,storeName,dataObj) {
 //写入操作是一个异步操作，通过监听连接对象的success事件和error事件，了解是否写入成功。
   request.onsuccess = function (event) {
     console.log('数据写入成功');
+    if(callback){
+      callback(dataObj);
+    }
   };
 
   request.onerror = function (event) {
@@ -179,8 +182,8 @@ function readAll(db,storeName,callback) {
     }*/
   };
 }
-//更新数据
-function update(db,storeName,newData) {
+//--------------------------------------更新数据
+function update(db,storeName,newData,callback) {
 
   var request = db.transaction(storeName, 'readwrite')
     .objectStore(storeName).put(newData);
@@ -188,6 +191,9 @@ function update(db,storeName,newData) {
 
   request.onsuccess = function (event) {
     console.log('数据更新成功');
+    if(callback){
+      callback(db,newData)  // 这样应该会好些 db 
+    }
   };
 
   request.onerror = function (event) {
@@ -207,9 +213,10 @@ function remove(db,storeName,keyPath,callback) {
     .delete(keyPath);
 
   request.onsuccess = function (event) {
-    console.log('数据删除成功');
+    console.log('数据删除成功,keyPath=',keyPath);
     if(callback){
-      callback(db,storeName);
+     // callback(keyPath); // 回调一，直接display none,代码复用性不高
+      callback(db,keyPath)  // 这样应该会好些 db 和已经删除的主键
     }
   };
    request.onerror = function (event) {
